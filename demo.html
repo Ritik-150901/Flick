@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flick — Animation Library Demo</title>
+<link rel="stylesheet" href="flick.css">
+<script src="flick.js" defer></script>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:#0b0b14;color:#e7e7f3;line-height:1.5}
+  section{padding:110px 6vw;position:relative}
+  h1,h2,h3{margin:0 0 .4em;line-height:1.1}
+  h1{font-size:clamp(2.6rem,8vw,6rem)}
+  h2{font-size:clamp(1.8rem,4vw,3rem)}
+  p{color:#a9a9c4;max-width:60ch}
+  .wrap{max-width:1100px;margin:0 auto}
+  .center{text-align:center}.center p{margin-inline:auto}
+  .tag{display:inline-block;padding:.3em .9em;border-radius:99px;background:#1c1c33;color:#9ea2ff;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:1rem}
+  .btn{display:inline-block;padding:.9em 1.8em;border:0;border-radius:12px;background:var(--fx-accent);color:#fff;font:inherit;font-weight:600;cursor:pointer;text-decoration:none}
+  .btn.ghost{background:transparent;border:2px solid var(--fx-accent);color:#c7c9ff}
+  .grid{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin-top:40px}
+  .card{background:#14142a;border:1px solid #23234a;border-radius:18px;padding:28px}
+  .card h3{font-size:1.15rem}
+  .card p{margin:0;font-size:.95rem}
+  .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden}
+  .hero p{margin:1rem auto 2rem;font-size:1.2rem}
+  .shape{position:absolute;border-radius:50%;filter:blur(2px);opacity:.7}
+  .s1{width:180px;height:180px;background:#6366f1;top:12%;left:8%}
+  .s2{width:110px;height:110px;background:#ec4899;bottom:16%;left:18%}
+  .s3{width:150px;height:150px;background:#f59e0b;top:20%;right:10%}
+  .s4{width:70px;height:70px;background:#10b981;bottom:22%;right:20%}
+  .hero .inner{position:relative;z-index:2}
+  .big{font-size:clamp(2rem,5vw,3.5rem);font-weight:800}
+  .stat{text-align:center}
+  .stat b{display:block;font-size:3rem;color:#fff}
+  .stat span{color:#9a9ab8}
+  .parallax-stage{height:520px;display:flex;align-items:center;justify-content:center;text-align:center;color:#fff}
+  .parallax-stage h2{text-shadow:0 4px 30px rgba(0,0,0,.5)}
+  .float-box{position:absolute;width:90px;height:90px;border-radius:20px;background:rgba(255,255,255,.16);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,.3)}
+  .scroll-demo{min-height:130vh;display:flex;align-items:center;justify-content:center;gap:40px;flex-wrap:wrap}
+  .sbox{width:200px;height:200px;border-radius:24px;display:grid;place-items:center;font-weight:700;color:#fff}
+  .tilt-card{height:220px;border-radius:20px;padding:28px;background:linear-gradient(135deg,#6366f1,#ec4899);color:#fff}
+  .flip{height:220px}
+  .flip-front,.flip-back{border-radius:20px;display:grid;place-items:center;text-align:center;padding:20px;font-weight:700}
+  .flip-front{background:#14142a;border:1px solid #23234a}
+  .flip-back{background:linear-gradient(135deg,#10b981,#06b6d4);color:#fff}
+  .loops .card{display:grid;place-items:center;gap:14px;text-align:center}
+  .dot{width:56px;height:56px;border-radius:14px;background:linear-gradient(135deg,#6366f1,#ec4899)}
+  .hov{padding:1.1em 1.6em;border-radius:12px;background:#1b1b38;border:1px solid #2c2c58;text-align:center;font-weight:600;color:#e7e7f3}
+  .marq{font-size:1.6rem;font-weight:800;color:#6a6a95;white-space:nowrap}
+  footer{padding:70px 6vw;text-align:center;color:#6f6f92}
+</style>
+</head>
+<body>
+<div class="fx-progress"></div>
+
+<!-- HERO -->
+<section class="hero fx-bg-gradient fx-mouse" data-fx-global>
+  <div class="shape s1 fx-float" data-fx-depth="30"></div>
+  <div class="shape s2 fx-float fx-slow" data-fx-depth="-20"></div>
+  <div class="shape s3 fx-float fx-slower" data-fx-depth="45"></div>
+  <div class="shape s4 fx-pulse" data-fx-depth="-35"></div>
+  <div class="inner">
+    <span class="tag fx-in-down">Flick · CSS + JS animations</span>
+    <h1 class="fx-chars fx-text-up">Animate everything.</h1>
+    <p class="fx-in-up fx-delay-8">
+      Just add classes. I’m a
+      <strong class="fx-typewriter" data-fx-words="Designer|Developer|Dreamer|Flick user"></strong>
+    </p>
+    <a class="btn fx-magnetic fx-ripple fx-hover-glow fx-in-zoom fx-delay-10" href="#features">Get started</a>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<section style="padding:40px 0">
+  <div class="fx-marquee" data-fx-speed="22">
+    <span class="marq">PARALLAX</span><span class="marq">TYPEWRITER</span><span class="marq">SCROLL REVEAL</span>
+    <span class="marq">TILT</span><span class="marq">MARQUEE</span><span class="marq">COUNTERS</span><span class="marq">STAGGER</span>
+  </div>
+</section>
+
+<!-- STATS -->
+<section id="features">
+  <div class="wrap center">
+    <span class="tag fx-in-fade">Counters</span>
+    <h2 class="fx-words fx-text-blur">Numbers that count themselves</h2>
+    <div class="grid fx-stagger" data-fx-stagger="150" data-fx-effect="zoom">
+      <div class="stat"><b class="fx-count" data-fx-to="12500" data-fx-suffix="+">0</b><span>Happy users</span></div>
+      <div class="stat"><b class="fx-count" data-fx-to="99.9" data-fx-suffix="%">0</b><span>Uptime</span></div>
+      <div class="stat"><b class="fx-count" data-fx-to="48" data-fx-prefix="#">0</b><span>Countries</span></div>
+      <div class="stat"><b class="fx-count" data-fx-to="4.9" data-fx-suffix="★">0</b><span>Rating</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- STAGGERED REVEALS -->
+<section>
+  <div class="wrap">
+    <span class="tag">Scroll reveal</span>
+    <h2 class="fx-mask"><span>18 entrance styles</span></h2>
+    <p class="fx-in-up">Add <code>fx-in-up</code>, <code>fx-in-blur</code>, <code>fx-in-flip-x</code>… — they play when scrolled into view. Wrap items in <code>fx-stagger</code> to cascade them.</p>
+    <div class="grid fx-stagger" data-fx-stagger="120">
+      <div class="card"><h3>fx-in-up</h3><p>Slides up and fades in.</p></div>
+      <div class="card"><h3>fx-in-blur</h3><p>Comes into focus.</p></div>
+      <div class="card"><h3>fx-in-flip-x</h3><p>Flips in 3D.</p></div>
+      <div class="card"><h3>fx-in-bounce</h3><p>Springy pop.</p></div>
+    </div>
+    <div class="grid">
+      <div class="card fx-in-left"><h3>fx-in-left</h3><p>From the left.</p></div>
+      <div class="card fx-in-wipe-left fx-slow"><h3>fx-in-wipe-left</h3><p>Curtain wipe.</p></div>
+      <div class="card fx-in-drop"><h3>fx-in-drop</h3><p>Drops with a bounce.</p></div>
+      <div class="card fx-in-right"><h3>fx-in-right</h3><p>From the right.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- PARALLAX -->
+<section class="parallax-stage fx-parallax-bg" data-fx-speed="0.45"
+  style="background-image:radial-gradient(circle at 20% 30%,#6366f1,transparent 55%),radial-gradient(circle at 80% 70%,#ec4899,transparent 55%),linear-gradient(135deg,#0f172a,#1e1b4b)">
+  <div class="float-box fx-parallax" data-fx-speed="-0.25" data-fx-rotate="40" style="top:14%;left:12%"></div>
+  <div class="float-box fx-parallax" data-fx-speed="0.5" style="bottom:12%;left:30%;width:60px;height:60px"></div>
+  <div class="float-box fx-parallax" data-fx-speed="-0.4" data-fx-rotate="-60" style="top:20%;right:14%;width:120px;height:120px"></div>
+  <div class="float-box fx-parallax" data-fx-speed="0.3" data-fx-axis="x" style="bottom:18%;right:26%"></div>
+  <div>
+    <h2 class="fx-parallax" data-fx-speed="-0.12">Parallax in one class</h2>
+    <p style="color:#e0e0ff;margin-inline:auto">Background layers move slower, floating shapes move faster.</p>
+  </div>
+</section>
+
+<!-- TEXT EFFECTS -->
+<section>
+  <div class="wrap center">
+    <span class="tag">Text effects</span>
+    <h2 class="fx-chars fx-wave">Wave of letters</h2>
+    <h2 class="fx-chars fx-rainbow fx-text-zoom">Rainbow zoom letters</h2>
+    <h2 class="fx-gradient-text">Animated gradient text</h2>
+    <h2 class="fx-shimmer-text">Shimmering loading text</h2>
+    <h2 class="fx-neon">Neon glow</h2>
+    <h2 class="fx-glitch">Glitch effect</h2>
+    <h2 class="fx-scramble" data-fx-duration="1600">Scramble decode</h2>
+    <h2>Make <span class="fx-highlight">important words</span> pop</h2>
+    <h2 class="fx-chars fx-text-rotate" data-fx-stagger="60">Rotating letters one by one</h2>
+  </div>
+</section>
+
+<!-- SCROLL LINKED -->
+<section class="center" style="padding-bottom:0">
+  <span class="tag">Scroll-linked</span>
+  <h2>Driven by your scroll position</h2>
+  <p>These boxes use <code>fx-scroll</code> with utility classes.</p>
+</section>
+<section class="scroll-demo">
+  <div class="sbox fx-scroll fx-scroll-rotate" style="background:#6366f1">rotate</div>
+  <div class="sbox fx-scroll fx-scroll-scale fx-scroll-fade" style="background:#ec4899">scale + fade</div>
+  <div class="sbox fx-scroll fx-scroll-left fx-scroll-fade" style="background:#f59e0b">slide in</div>
+  <div class="sbox fx-scroll fx-scroll-zoom" style="background:#10b981">zoom</div>
+</section>
+
+<!-- INTERACTIVE -->
+<section>
+  <div class="wrap">
+    <span class="tag">Interactive</span>
+    <h2>Tilt, flip &amp; magnetic</h2>
+    <div class="grid">
+      <div class="tilt-card fx-tilt fx-tilt-glare"><h3>3D tilt + glare</h3><p style="color:#fff">Move your mouse over me.</p></div>
+      <div class="fx-flip-card flip">
+        <div class="fx-flip-inner">
+          <div class="fx-flip-front">Hover to flip</div>
+          <div class="fx-flip-back">Hello from the back!</div>
+        </div>
+      </div>
+      <div class="card center" style="display:grid;place-items:center;gap:16px">
+        <button class="btn fx-magnetic fx-ripple" data-fx-strength="0.5">Magnetic + ripple</button>
+        <button class="btn ghost" data-fx-click="shake">Click: shake</button>
+        <button class="btn ghost" data-fx-hover="tada">Hover: tada</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LOOPS -->
+<section>
+  <div class="wrap">
+    <span class="tag">Attention seekers</span>
+    <h2>Looping animations</h2>
+    <div class="grid loops">
+      <div class="card"><div class="dot fx-pulse"></div>fx-pulse</div>
+      <div class="card"><div class="dot fx-bounce"></div>fx-bounce</div>
+      <div class="card"><div class="dot fx-shake"></div>fx-shake</div>
+      <div class="card"><div class="dot fx-wobble"></div>fx-wobble</div>
+      <div class="card"><div class="dot fx-swing"></div>fx-swing</div>
+      <div class="card"><div class="dot fx-tada"></div>fx-tada</div>
+      <div class="card"><div class="dot fx-float"></div>fx-float</div>
+      <div class="card"><div class="dot fx-spin fx-slow"></div>fx-spin</div>
+      <div class="card"><div class="dot fx-heartbeat"></div>fx-heartbeat</div>
+      <div class="card"><div class="dot fx-jello"></div>fx-jello</div>
+      <div class="card"><div class="dot fx-rubber"></div>fx-rubber</div>
+      <div class="card"><div class="dot fx-glow"></div>fx-glow</div>
+      <div class="card"><div class="dot fx-flip fx-slow"></div>fx-flip</div>
+      <div class="card"><div class="dot fx-wiggle"></div>fx-wiggle</div>
+      <div class="card"><div class="dot fx-breathe"></div>fx-breathe</div>
+      <div class="card"><span class="fx-spinner"></span>fx-spinner</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOVERS -->
+<section>
+  <div class="wrap">
+    <span class="tag">Hover</span>
+    <h2>Hover effects</h2>
+    <div class="grid">
+      <div class="hov fx-hover-grow">fx-hover-grow</div>
+      <div class="hov fx-hover-lift">fx-hover-lift</div>
+      <div class="hov fx-hover-tilt">fx-hover-tilt</div>
+      <div class="hov fx-hover-glow">fx-hover-glow</div>
+      <div class="hov fx-hover-shine">fx-hover-shine</div>
+      <div class="hov fx-hover-fill">fx-hover-fill</div>
+      <div class="hov fx-hover-spin">fx-hover-spin</div>
+      <div class="hov"><a class="fx-hover-underline" href="#" style="color:inherit;text-decoration:none">fx-hover-underline</a></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <h3 class="fx-gradient-text" style="font-size:2rem">Flick</h3>
+  Made with ♥ — add a class, get an animation.
+</footer>
+</body>
+</html>

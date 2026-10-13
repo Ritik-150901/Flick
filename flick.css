@@ -1,0 +1,462 @@
+/*!
+ * Flick.css v1.0.0 — class-based animation library (pairs with flick.js)
+ * MIT License
+ *
+ * Everything is a class that starts with "fx-".
+ *   <h1 class="fx-in-up">Hello</h1>
+ */
+
+/* ==========================================================================
+   1. Settings (override any of these on :root or on a single element)
+   ========================================================================== */
+:root {
+  --fx-duration: .8s;
+  --fx-delay: 0s;
+  --fx-ease: cubic-bezier(.22, 1, .36, 1);
+  --fx-distance: 40px;
+  --fx-loop: 1.5s;
+  --fx-count: infinite;
+  --fx-stagger: 50ms;
+  --fx-accent: #6366f1;
+  --fx-accent-2: #ec4899;
+}
+
+/* ==========================================================================
+   2. Modifiers (combine with any animation class, or put on a parent)
+   ========================================================================== */
+/* speed */
+.fx-fastest { --fx-duration: .25s; --fx-loop: .5s; }
+.fx-fast    { --fx-duration: .5s;  --fx-loop: .9s; }
+.fx-slow    { --fx-duration: 1.2s; --fx-loop: 2.5s; }
+.fx-slower  { --fx-duration: 2s;   --fx-loop: 4s; }
+.fx-slowest { --fx-duration: 3s;   --fx-loop: 6s; }
+
+/* delay (100ms steps) */
+.fx-delay-1  { --fx-delay: .1s; }
+.fx-delay-2  { --fx-delay: .2s; }
+.fx-delay-3  { --fx-delay: .3s; }
+.fx-delay-4  { --fx-delay: .4s; }
+.fx-delay-5  { --fx-delay: .5s; }
+.fx-delay-6  { --fx-delay: .6s; }
+.fx-delay-7  { --fx-delay: .7s; }
+.fx-delay-8  { --fx-delay: .8s; }
+.fx-delay-9  { --fx-delay: .9s; }
+.fx-delay-10 { --fx-delay: 1s; }
+
+/* easing */
+.fx-ease-linear  { --fx-ease: linear; }
+.fx-ease-in      { --fx-ease: cubic-bezier(.4, 0, 1, 1); }
+.fx-ease-out     { --fx-ease: cubic-bezier(0, 0, .2, 1); }
+.fx-ease-in-out  { --fx-ease: cubic-bezier(.65, 0, .35, 1); }
+.fx-ease-bounce  { --fx-ease: cubic-bezier(.34, 1.56, .64, 1); }
+.fx-ease-snappy  { --fx-ease: cubic-bezier(.9, 0, .1, 1); }
+
+/* travel distance for fx-in-up / down / left / right */
+.fx-dist-sm { --fx-distance: 20px; }
+.fx-dist-lg { --fx-distance: 100px; }
+.fx-dist-xl { --fx-distance: 200px; }
+
+/* repeat count for looping classes (default: infinite) */
+.fx-once   { --fx-count: 1; }
+.fx-twice  { --fx-count: 2; }
+.fx-thrice { --fx-count: 3; }
+.fx-infinite { --fx-count: infinite; }
+
+/* misc */
+.fx-paused { animation-play-state: paused !important; }
+.fx-hover-pause:hover { animation-play-state: paused; }
+.fx-inline-block { display: inline-block; }
+
+/* transforms don't work on plain inline elements, so fix that automatically */
+:is(span, a, em, strong, b, i, small, mark, label, code):is(
+  [class*="fx-in-"], [class*="fx-hover-"],
+  .fx-pulse, .fx-bounce, .fx-shake, .fx-wobble, .fx-swing, .fx-tada, .fx-float,
+  .fx-spin, .fx-spin-reverse, .fx-heartbeat, .fx-jello, .fx-rubber, .fx-wiggle,
+  .fx-breathe, .fx-ping, .fx-flip, .fx-glow, .fx-flash, .fx-magnetic, .fx-tilt,
+  .fx-parallax, .fx-scroll
+) { display: inline-block; }
+
+/* ==========================================================================
+   3. Scroll-triggered entrances  (fx-in-*)
+   flick.js adds .fx-visible when the element scrolls into view.
+   ========================================================================== */
+.fx-js [class*="fx-in-"]:not(.fx-visible) { opacity: 0; }
+
+[class*="fx-in-"].fx-visible {
+  animation-duration: var(--fx-duration);
+  animation-delay: var(--fx-delay);
+  animation-timing-function: var(--fx-ease);
+  animation-fill-mode: backwards;
+  animation-iteration-count: 1;
+}
+
+.fx-visible.fx-in-fade      { animation-name: fx-in-fade; }
+.fx-visible.fx-in-up        { animation-name: fx-in-up; }
+.fx-visible.fx-in-down      { animation-name: fx-in-down; }
+.fx-visible.fx-in-left      { animation-name: fx-in-left; }
+.fx-visible.fx-in-right     { animation-name: fx-in-right; }
+.fx-visible.fx-in-zoom      { animation-name: fx-in-zoom; }
+.fx-visible.fx-in-zoom-out  { animation-name: fx-in-zoom-out; }
+.fx-visible.fx-in-flip-x    { animation-name: fx-in-flip-x; }
+.fx-visible.fx-in-flip-y    { animation-name: fx-in-flip-y; }
+.fx-visible.fx-in-rotate    { animation-name: fx-in-rotate; }
+.fx-visible.fx-in-blur      { animation-name: fx-in-blur; }
+.fx-visible.fx-in-bounce    { animation-name: fx-in-bounce; }
+.fx-visible.fx-in-skew      { animation-name: fx-in-skew; }
+.fx-visible.fx-in-drop      { animation-name: fx-in-drop; }
+.fx-visible.fx-in-wipe-left  { animation-name: fx-in-wipe-left; }
+.fx-visible.fx-in-wipe-right { animation-name: fx-in-wipe-right; }
+.fx-visible.fx-in-wipe-up    { animation-name: fx-in-wipe-up; }
+.fx-visible.fx-in-wipe-down  { animation-name: fx-in-wipe-down; }
+
+@keyframes fx-in-fade     { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fx-in-up       { from { opacity: 0; transform: translate3d(0, var(--fx-distance), 0); } to { opacity: 1; transform: none; } }
+@keyframes fx-in-down     { from { opacity: 0; transform: translate3d(0, calc(var(--fx-distance) * -1), 0); } to { opacity: 1; transform: none; } }
+@keyframes fx-in-left     { from { opacity: 0; transform: translate3d(calc(var(--fx-distance) * -1), 0, 0); } to { opacity: 1; transform: none; } }
+@keyframes fx-in-right    { from { opacity: 0; transform: translate3d(var(--fx-distance), 0, 0); } to { opacity: 1; transform: none; } }
+@keyframes fx-in-zoom     { from { opacity: 0; transform: scale(.6); } to { opacity: 1; transform: none; } }
+@keyframes fx-in-zoom-out { from { opacity: 0; transform: scale(1.5); } to { opacity: 1; transform: none; } }
+@keyframes fx-in-flip-x   { from { opacity: 0; transform: perspective(800px) rotateX(-90deg); } to { opacity: 1; transform: perspective(800px) rotateX(0); } }
+@keyframes fx-in-flip-y   { from { opacity: 0; transform: perspective(800px) rotateY(90deg); } to { opacity: 1; transform: perspective(800px) rotateY(0); } }
+@keyframes fx-in-rotate   { from { opacity: 0; transform: rotate(-20deg) scale(.8); } to { opacity: 1; transform: none; } }
+@keyframes fx-in-blur     { from { opacity: 0; filter: blur(16px); transform: scale(1.05); } to { opacity: 1; filter: blur(0); transform: none; } }
+@keyframes fx-in-bounce   { 0% { opacity: 0; transform: scale(.3); } 50% { opacity: 1; transform: scale(1.08); } 70% { transform: scale(.95); } 100% { opacity: 1; transform: scale(1); } }
+@keyframes fx-in-skew     { from { opacity: 0; transform: translateX(calc(var(--fx-distance) * -2)) skewX(25deg); } to { opacity: 1; transform: none; } }
+@keyframes fx-in-drop     { 0% { opacity: 0; transform: translateY(-120px); } 60% { opacity: 1; transform: translateY(12px); } 80% { transform: translateY(-6px); } 100% { opacity: 1; transform: none; } }
+@keyframes fx-in-wipe-left  { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes fx-in-wipe-right { from { clip-path: inset(0 0 0 100%); } to { clip-path: inset(0 0 0 0); } }
+@keyframes fx-in-wipe-up    { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes fx-in-wipe-down  { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+
+/* Generic hook: any element with .fx-reveal just gets .fx-visible on scroll,
+   so you can style the "after" state yourself. */
+
+/* ==========================================================================
+   4. Attention / looping animations  (run immediately)
+   ========================================================================== */
+.fx-pulse, .fx-bounce, .fx-shake, .fx-wobble, .fx-swing, .fx-tada, .fx-float,
+.fx-spin, .fx-spin-reverse, .fx-heartbeat, .fx-jello, .fx-flash, .fx-rubber,
+.fx-wiggle, .fx-breathe, .fx-ping, .fx-flip, .fx-glow {
+  animation-duration: var(--fx-loop);
+  animation-delay: var(--fx-delay);
+  animation-iteration-count: var(--fx-count);
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: both;
+}
+
+.fx-pulse      { animation-name: fx-k-pulse; }
+.fx-bounce     { animation-name: fx-k-bounce; }
+.fx-shake      { animation-name: fx-k-shake; animation-timing-function: linear; }
+.fx-wobble     { animation-name: fx-k-wobble; }
+.fx-swing      { animation-name: fx-k-swing; transform-origin: top center; }
+.fx-tada       { animation-name: fx-k-tada; }
+.fx-float      { animation-name: fx-k-float; }
+.fx-spin       { animation-name: fx-k-spin; animation-timing-function: linear; }
+.fx-spin-reverse { animation-name: fx-k-spin; animation-direction: reverse; animation-timing-function: linear; }
+.fx-heartbeat  { animation-name: fx-k-heartbeat; }
+.fx-jello      { animation-name: fx-k-jello; }
+.fx-flash      { animation-name: fx-k-flash; animation-timing-function: linear; }
+.fx-rubber     { animation-name: fx-k-rubber; }
+.fx-wiggle     { animation-name: fx-k-wiggle; }
+.fx-breathe    { animation-name: fx-k-breathe; }
+.fx-ping       { animation-name: fx-k-ping; animation-timing-function: cubic-bezier(0, 0, .2, 1); }
+.fx-flip       { animation-name: fx-k-flip; }
+.fx-glow       { animation-name: fx-k-glow; }
+
+@keyframes fx-k-pulse     { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+@keyframes fx-k-bounce    { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-25%); } }
+@keyframes fx-k-shake     { 0%, 100% { transform: translateX(0); } 10%, 30%, 50%, 70%, 90% { transform: translateX(-8px); } 20%, 40%, 60%, 80% { transform: translateX(8px); } }
+@keyframes fx-k-wobble    { 0%, 100% { transform: none; } 15% { transform: translateX(-12%) rotate(-5deg); } 30% { transform: translateX(10%) rotate(3deg); } 45% { transform: translateX(-8%) rotate(-3deg); } 60% { transform: translateX(5%) rotate(2deg); } 75% { transform: translateX(-3%) rotate(-1deg); } }
+@keyframes fx-k-swing     { 20% { transform: rotate(15deg); } 40% { transform: rotate(-10deg); } 60% { transform: rotate(5deg); } 80% { transform: rotate(-5deg); } 0%, 100% { transform: rotate(0); } }
+@keyframes fx-k-tada      { 0%, 100% { transform: scale(1) rotate(0); } 10%, 20% { transform: scale(.9) rotate(-3deg); } 30%, 50%, 70%, 90% { transform: scale(1.1) rotate(3deg); } 40%, 60%, 80% { transform: scale(1.1) rotate(-3deg); } }
+@keyframes fx-k-float     { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+@keyframes fx-k-spin      { to { transform: rotate(360deg); } }
+@keyframes fx-k-heartbeat { 0%, 100% { transform: scale(1); } 14% { transform: scale(1.25); } 28% { transform: scale(1); } 42% { transform: scale(1.25); } 70% { transform: scale(1); } }
+@keyframes fx-k-jello     { 0%, 100% { transform: none; } 30% { transform: skew(-12.5deg, -12.5deg); } 40% { transform: skew(6.25deg, 6.25deg); } 50% { transform: skew(-3deg, -3deg); } 65% { transform: skew(1.5deg, 1.5deg); } 75% { transform: skew(-.8deg, -.8deg); } }
+@keyframes fx-k-flash     { 0%, 50%, 100% { opacity: 1; } 25%, 75% { opacity: 0; } }
+@keyframes fx-k-rubber    { 0%, 100% { transform: scale(1); } 30% { transform: scale(1.25, .75); } 40% { transform: scale(.75, 1.25); } 50% { transform: scale(1.15, .85); } 65% { transform: scale(.95, 1.05); } 75% { transform: scale(1.05, .95); } }
+@keyframes fx-k-wiggle    { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+@keyframes fx-k-breathe   { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(.94); opacity: .75; } }
+@keyframes fx-k-ping      { 75%, 100% { transform: scale(1.6); opacity: 0; } }
+@keyframes fx-k-flip      { from { transform: perspective(600px) rotateY(0); } to { transform: perspective(600px) rotateY(360deg); } }
+@keyframes fx-k-glow      { 0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--fx-accent) 60%, transparent); } 50% { box-shadow: 0 0 28px 6px color-mix(in srgb, var(--fx-accent) 60%, transparent); } }
+
+/* ==========================================================================
+   5. Hover effects  (fx-hover-*)
+   ========================================================================== */
+[class*="fx-hover-"] { transition: transform .35s var(--fx-ease), box-shadow .35s var(--fx-ease), color .3s, background-color .3s; }
+.fx-hover-grow:hover   { transform: scale(1.08); }
+.fx-hover-shrink:hover { transform: scale(.94); }
+.fx-hover-pop:hover    { transform: scale(1.15); transition-timing-function: cubic-bezier(.34, 1.56, .64, 1); }
+.fx-hover-lift:hover   { transform: translateY(-8px); box-shadow: 0 18px 40px rgba(0, 0, 0, .18); }
+.fx-hover-tilt:hover   { transform: rotate(-3deg) scale(1.03); }
+.fx-hover-spin:hover   { transform: rotate(360deg); transition-duration: .7s; }
+.fx-hover-glow:hover   { box-shadow: 0 0 0 4px color-mix(in srgb, var(--fx-accent) 25%, transparent), 0 8px 30px color-mix(in srgb, var(--fx-accent) 55%, transparent); }
+
+.fx-hover-shine { position: relative; overflow: hidden; }
+.fx-hover-shine::after {
+  content: ""; position: absolute; top: 0; left: -75%; width: 50%; height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, .55), transparent);
+  transform: skewX(-20deg); transition: left .7s var(--fx-ease); pointer-events: none;
+}
+.fx-hover-shine:hover::after { left: 125%; }
+
+.fx-hover-underline { position: relative; display: inline-block; }
+.fx-hover-underline::after {
+  content: ""; position: absolute; left: 0; bottom: -3px; width: 100%; height: 2px;
+  background: currentColor; transform: scaleX(0); transform-origin: right;
+  transition: transform .4s var(--fx-ease);
+}
+.fx-hover-underline:hover::after { transform: scaleX(1); transform-origin: left; }
+
+.fx-hover-fill {
+  background-image: linear-gradient(var(--fx-accent), var(--fx-accent));
+  background-repeat: no-repeat; background-size: 0% 100%;
+  transition: background-size .45s var(--fx-ease), color .45s;
+}
+.fx-hover-fill:hover { background-size: 100% 100%; color: #fff; }
+
+/* ==========================================================================
+   6. Text effects
+   ========================================================================== */
+/* --- split text: .fx-chars (letter by letter) / .fx-words (word by word) ---
+   flick.js wraps the pieces; they animate when scrolled into view.        */
+.fx-chars { --fx-stagger: 35ms; }
+.fx-words { --fx-stagger: 110ms; }
+.fx-word, .fx-char { display: inline-block; }
+.fx-word { white-space: nowrap; }
+.fx-char { white-space: pre; }
+
+.fx-js .fx-chars:not(.fx-visible) .fx-char,
+.fx-js .fx-words:not(.fx-visible) .fx-word { opacity: 0; }
+
+.fx-chars.fx-visible .fx-char,
+.fx-words.fx-visible .fx-word {
+  animation: var(--fx-text, fx-t-up) calc(var(--fx-duration) * .8) var(--fx-ease) backwards;
+  animation-delay: calc(var(--fx-delay) + var(--i, 0) * var(--fx-stagger));
+}
+
+.fx-text-up     { --fx-text: fx-t-up; }
+.fx-text-fade   { --fx-text: fx-t-fade; }
+.fx-text-blur   { --fx-text: fx-t-blur; }
+.fx-text-rotate { --fx-text: fx-t-rotate; }
+.fx-text-zoom   { --fx-text: fx-t-zoom; }
+.fx-text-flip   { --fx-text: fx-t-flip; }
+.fx-text-drop   { --fx-text: fx-t-drop; }
+.fx-text-slide  { --fx-text: fx-t-slide; }
+
+@keyframes fx-t-up     { from { opacity: 0; transform: translateY(.8em); } to { opacity: 1; transform: none; } }
+@keyframes fx-t-fade   { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fx-t-blur   { from { opacity: 0; filter: blur(10px); transform: translateY(.3em); } to { opacity: 1; filter: blur(0); transform: none; } }
+@keyframes fx-t-rotate { from { opacity: 0; transform: translateY(.6em) rotate(-25deg); transform-origin: bottom left; } to { opacity: 1; transform: none; transform-origin: bottom left; } }
+@keyframes fx-t-zoom   { from { opacity: 0; transform: scale(0); } to { opacity: 1; transform: none; } }
+@keyframes fx-t-flip   { from { opacity: 0; transform: perspective(400px) rotateX(-90deg); } to { opacity: 1; transform: none; } }
+@keyframes fx-t-drop   { from { opacity: 0; transform: translateY(-1em); } to { opacity: 1; transform: none; } }
+@keyframes fx-t-slide  { from { opacity: 0; transform: translateX(-.6em); } to { opacity: 1; transform: none; } }
+
+/* looping letter effects (add to a .fx-chars element) */
+.fx-chars.fx-wave .fx-char    { animation: fx-k-wave 1.4s ease-in-out infinite; animation-delay: calc(var(--i) * 70ms); }
+.fx-chars.fx-rainbow .fx-char { color: hsl(calc(var(--i) * 28), 90%, 60%); }
+@keyframes fx-k-wave { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-.35em); } }
+
+/* --- typewriter (needs flick.js) --- */
+.fx-typewriter { display: inline-block; min-height: 1.2em; }
+.fx-js .fx-typewriter:not(.fx-visible) { visibility: hidden; }
+.fx-typewriter::after {
+  content: ""; display: inline-block; width: .08em; height: 1em; margin-left: .12em;
+  background: currentColor; vertical-align: -.1em; animation: fx-k-blink 1s steps(1) infinite;
+}
+@keyframes fx-k-blink { 50% { opacity: 0; } }
+
+/* --- scramble / count-up (needs flick.js) --- */
+.fx-js .fx-scramble:not(.fx-visible) { opacity: 0; }
+.fx-count, .fx-scramble { font-variant-numeric: tabular-nums; }
+
+/* --- masked line reveal: text slides up out of a hidden box --- */
+.fx-mask { display: block; overflow: hidden; padding-bottom: .12em; margin-bottom: -.12em; }
+.fx-mask-inner { display: block; transform: translateY(110%); }
+.fx-mask.fx-visible .fx-mask-inner { animation: fx-mask-up var(--fx-duration) var(--fx-ease) var(--fx-delay) both; }
+@keyframes fx-mask-up { from { transform: translateY(110%); } to { transform: none; } }
+
+/* --- highlighter sweep behind text --- */
+.fx-highlight {
+  background: linear-gradient(transparent 58%, var(--fx-hl, #fde68a) 58%) no-repeat;
+  background-size: 0% 100%;
+  -webkit-box-decoration-break: clone; box-decoration-break: clone;
+  transition: background-size .9s var(--fx-ease) var(--fx-delay);
+}
+.fx-highlight.fx-visible { background-size: 100% 100%; }
+
+/* --- gradient / shimmer / neon / glitch --- */
+.fx-gradient-text {
+  background: linear-gradient(90deg, var(--fx-accent), var(--fx-accent-2), #f59e0b, var(--fx-accent));
+  background-size: 200% 100%;
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent;
+  animation: fx-k-gradient 5s linear infinite;
+}
+@keyframes fx-k-gradient { to { background-position: 200% 0; } }
+
+.fx-shimmer-text {
+  background: linear-gradient(110deg, var(--fx-shimmer-base, #64748b) 40%, var(--fx-shimmer-hi, #fff) 50%, var(--fx-shimmer-base, #64748b) 60%);
+  background-size: 250% 100%;
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent;
+  animation: fx-k-shimmer 2.4s linear infinite;
+}
+@keyframes fx-k-shimmer { from { background-position: 150% 0; } to { background-position: -50% 0; } }
+
+.fx-neon {
+  color: #fff;
+  text-shadow: 0 0 6px currentColor, 0 0 18px var(--fx-accent), 0 0 38px var(--fx-accent);
+  animation: fx-k-neon 2s ease-in-out infinite alternate;
+}
+@keyframes fx-k-neon { from { text-shadow: 0 0 4px currentColor, 0 0 10px var(--fx-accent), 0 0 20px var(--fx-accent); } to { text-shadow: 0 0 8px currentColor, 0 0 26px var(--fx-accent), 0 0 56px var(--fx-accent-2); } }
+
+.fx-glitch { position: relative; display: inline-block; }
+.fx-glitch::before, .fx-glitch::after {
+  content: attr(data-text); position: absolute; inset: 0; pointer-events: none;
+}
+.fx-glitch::before { color: #22d3ee; animation: fx-k-glitch-a 2.6s infinite steps(1); }
+.fx-glitch::after  { color: #f43f5e; animation: fx-k-glitch-b 2.6s infinite steps(1); }
+@keyframes fx-k-glitch-a {
+  0%, 100% { clip-path: inset(0 0 100% 0); transform: none; }
+  10% { clip-path: inset(10% 0 60% 0); transform: translate(-4px, 1px); }
+  20% { clip-path: inset(50% 0 20% 0); transform: translate(4px, -1px); }
+  30% { clip-path: inset(80% 0 5% 0); transform: translate(-3px, 0); }
+  40% { clip-path: inset(0 0 100% 0); transform: none; }
+}
+@keyframes fx-k-glitch-b {
+  0%, 100% { clip-path: inset(0 0 100% 0); transform: none; }
+  15% { clip-path: inset(60% 0 10% 0); transform: translate(4px, 0); }
+  25% { clip-path: inset(20% 0 55% 0); transform: translate(-4px, 1px); }
+  35% { clip-path: inset(40% 0 40% 0); transform: translate(3px, -1px); }
+  45% { clip-path: inset(0 0 100% 0); transform: none; }
+}
+
+/* ==========================================================================
+   7. Parallax & scroll-linked (needs flick.js)
+   ========================================================================== */
+/* Data attributes: data-fx-speed, data-fx-axis, data-fx-rotate, data-fx-scale  */
+.fx-parallax { will-change: translate; }
+
+/* Background parallax: put a background-image on the element (or data-fx-src) */
+.fx-parallax-bg { position: relative; overflow: hidden; isolation: isolate; }
+.fx-parallax-layer {
+  position: absolute; left: 0; right: 0; top: -20%; bottom: -20%; z-index: -1;
+  background-size: cover; background-position: center; background-repeat: no-repeat;
+  will-change: translate; pointer-events: none;
+}
+
+/* Mouse parallax: .fx-mouse container, children with data-fx-depth="20" */
+.fx-mouse [data-fx-depth] { transition: translate .35s ease-out; will-change: translate; }
+
+/* Scroll-linked: .fx-scroll exposes --fx-p (0-1 progress through the screen),
+   --fx-in (0-1 while entering) and --fx-out (0-1 while leaving).            */
+.fx-scroll { --fx-p: 0; --fx-in: 1; --fx-out: 0; }
+.fx-scroll-fade     { opacity: var(--fx-in, 1); }
+.fx-scroll-fade-out { opacity: calc(1 - var(--fx-out, 0)); }
+.fx-scroll-up       { translate: 0 calc((1 - var(--fx-in, 1)) * 90px); }
+.fx-scroll-left     { translate: calc((1 - var(--fx-in, 1)) * -120px) 0; }
+.fx-scroll-right    { translate: calc((1 - var(--fx-in, 1)) * 120px) 0; }
+.fx-scroll-scale    { scale: calc(.65 + .35 * var(--fx-in, 1)); }
+.fx-scroll-zoom     { scale: calc(.6 + .9 * var(--fx-p, .5)); }
+.fx-scroll-rotate   { rotate: calc(var(--fx-p, 0) * 360deg); }
+.fx-scroll-rotate-in { rotate: calc((1 - var(--fx-in, 1)) * -25deg); }
+
+/* Scroll progress bar: <div class="fx-progress"></div> */
+.fx-progress {
+  position: fixed; top: 0; left: 0; width: 100%; height: 4px; z-index: 9999;
+  transform-origin: 0 50%; transform: scaleX(var(--fx-scroll, 0));
+  background: linear-gradient(90deg, var(--fx-accent), var(--fx-accent-2));
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   8. Interactive (needs flick.js)
+   ========================================================================== */
+/* 3D tilt card (+ optional glare with .fx-tilt-glare) */
+.fx-tilt { position: relative; transform-style: preserve-3d; transition: transform .25s ease-out; will-change: transform; }
+.fx-tilt-glare-el {
+  position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  opacity: 0; transition: opacity .3s;
+}
+
+/* Magnetic button */
+.fx-magnetic { display: inline-block; transition: translate .3s var(--fx-ease); will-change: translate; }
+
+/* Click ripple */
+.fx-ripple { position: relative; overflow: hidden; }
+.fx-ripple-dot {
+  position: absolute; border-radius: 50%; background: rgba(255, 255, 255, .45);
+  transform: scale(0); animation: fx-k-ripple .65s linear; pointer-events: none;
+}
+@keyframes fx-k-ripple { to { transform: scale(1); opacity: 0; } }
+
+/* Custom cursor: add class "fx-cursor" to <body> */
+.fx-cursor-dot, .fx-cursor-ring {
+  position: fixed; top: 0; left: 0; pointer-events: none; z-index: 10000; border-radius: 50%;
+}
+.fx-cursor-dot  { width: 8px; height: 8px; margin: -4px 0 0 -4px; background: var(--fx-accent); }
+.fx-cursor-ring { width: 36px; height: 36px; margin: -18px 0 0 -18px; border: 2px solid var(--fx-accent); transition: scale .25s, background-color .25s; }
+.fx-cursor-ring.fx-cursor-active { scale: 1.8; background: color-mix(in srgb, var(--fx-accent) 15%, transparent); }
+
+/* Flip card: .fx-flip-card > .fx-flip-inner > .fx-flip-front + .fx-flip-back */
+.fx-flip-card { perspective: 1000px; }
+.fx-flip-inner { position: relative; width: 100%; height: 100%; transition: transform .8s var(--fx-ease); transform-style: preserve-3d; }
+.fx-flip-card:hover .fx-flip-inner { transform: rotateY(180deg); }
+.fx-flip-front, .fx-flip-back { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.fx-flip-back { transform: rotateY(180deg); }
+
+/* ==========================================================================
+   9. Marquee (needs flick.js to duplicate content for a seamless loop)
+   ========================================================================== */
+.fx-marquee {
+  --fx-marquee-speed: 25s; --fx-gap: 2.5rem;
+  display: flex; overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.fx-marquee-track {
+  display: flex; flex: none; align-items: center; gap: var(--fx-gap);
+  min-width: 100%; justify-content: space-around; padding-right: var(--fx-gap);
+  animation: fx-k-marquee var(--fx-marquee-speed) linear infinite;
+}
+.fx-marquee:hover .fx-marquee-track { animation-play-state: paused; }
+.fx-marquee-reverse .fx-marquee-track { animation-direction: reverse; }
+@keyframes fx-k-marquee { to { transform: translateX(-100%); } }
+
+/* ==========================================================================
+   10. Backgrounds & loaders
+   ========================================================================== */
+.fx-bg-gradient {
+  background: linear-gradient(-45deg, #6366f1, #ec4899, #f59e0b, #10b981);
+  background-size: 400% 400%; animation: fx-k-bg 14s ease infinite;
+}
+@keyframes fx-k-bg { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+
+.fx-skeleton {
+  display: block; border-radius: 6px; color: transparent !important;
+  background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+  background-size: 200% 100%; animation: fx-k-skeleton 1.4s linear infinite;
+}
+@keyframes fx-k-skeleton { to { background-position: -200% 0; } }
+
+.fx-spinner {
+  display: inline-block; width: 1.6em; height: 1.6em; border-radius: 50%;
+  border: .2em solid rgba(128, 128, 128, .25); border-top-color: var(--fx-accent);
+  animation: fx-k-spin .8s linear infinite;
+}
+
+/* ==========================================================================
+   11. Accessibility — respect "reduce motion"
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  [class*="fx-"], [class*="fx-"] *, [class*="fx-"]::before, [class*="fx-"]::after {
+    animation-duration: .01ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    transition-delay: 0s !important;
+  }
+}
